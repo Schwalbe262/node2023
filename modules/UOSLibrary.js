@@ -16,13 +16,27 @@ UOSLibrary.getLibSeat = async function getLibSeat(){
     const html = response.data;
     const $ = cheerio.load(html);
 
+    // 0 데시벨 1
     seats1 = $('tr:nth-child(3) td:nth-child(3)').text();
     seats2 = $('tr:nth-child(3) td:nth-child(4)').text();
     seats3 = $('tr:nth-child(3) td:nth-child(5)').text();
+    console.log(`${seats2}/${seats1} : ${seats3}`)
+    // 0 데시벨 2
+    seats1 = $('tr:nth-child(4) td:nth-child(3)').text();
+    seats2 = $('tr:nth-child(4) td:nth-child(4)').text();
+    seats3 = $('tr:nth-child(4) td:nth-child(5)').text();
+    console.log(`${seats2}/${seats1} : ${seats3}`)
+    // 0 ZONE 1
+    seats1 = $('tr:nth-child(5) td:nth-child(3)').text();
+    seats2 = $('tr:nth-child(5) td:nth-child(4)').text();
+    seats3 = $('tr:nth-child(5) td:nth-child(5)').text();
+    console.log(`${seats2}/${seats1} : ${seats3}`)
+    // 0 ZONE 2
+    seats1 = $('tr:nth-child(6) td:nth-child(3)').text();
+    seats2 = $('tr:nth-child(6) td:nth-child(4)').text();
+    seats3 = $('tr:nth-child(6) td:nth-child(5)').text();
+    console.log(`${seats2}/${seats1} : ${seats3}`)
 
-    console.log(seats1)
-    console.log(seats2)
-    console.log(seats3)
 
 }
 
