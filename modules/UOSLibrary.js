@@ -5,8 +5,11 @@ const FormData=require("form-data")
 const request = require('request')
 const fetch = require('node-fetch').default
 
+
 const axios = require('axios')
 const cheerio = require('cheerio')
+const fs = require('fs')
+const path = require('path')
 
 UOSLibrary.getLibSeat = async function getLibSeat(){
 
@@ -16,29 +19,56 @@ UOSLibrary.getLibSeat = async function getLibSeat(){
     const html = response.data;
     const $ = cheerio.load(html);
 
-    // 0 데시벨 1
-    seats1 = $('tr:nth-child(3) td:nth-child(3)').text().trim();
-    seats2 = $('tr:nth-child(3) td:nth-child(4)').text().trim();
-    seats3 = $('tr:nth-child(3) td:nth-child(5)').text().trim();
-    console.log(`0 데시벨 1 : ${seats2}/${seats1}`)
-    // 0 데시벨 2
-    seats1 = $('tr:nth-child(4) td:nth-child(3)').text().trim();
-    seats2 = $('tr:nth-child(4) td:nth-child(4)').text().trim();
-    seats3 = $('tr:nth-child(4) td:nth-child(5)').text().trim();
-    console.log(`0 데시벨 2 : ${seats2}/${seats1}`)
-    // 0 ZONE 1
-    seats1 = $('tr:nth-child(5) td:nth-child(3)').text().trim();
-    seats2 = $('tr:nth-child(5) td:nth-child(4)').text().trim();
-    seats3 = $('tr:nth-child(5) td:nth-child(5)').text().trim();
-    console.log(`0 ZONE 1 : ${seats2}/${seats1}`)
-    // 0 ZONE 2
-    seats1 = $('tr:nth-child(6) td:nth-child(3)').text().trim();
-    seats2 = $('tr:nth-child(6) td:nth-child(4)').text().trim();
-    seats3 = $('tr:nth-child(6) td:nth-child(5)').text().trim();
-    console.log(`0 ZONE 2 : ${seats2}/${seats1}`)
+    const seatsData = {};
 
+    // 0 데시벨 1
+    seats1_1 = $('tr:nth-child(3) td:nth-child(3)').text().trim(); // 총좌석
+    seats1_2 = $('tr:nth-child(3) td:nth-child(4)').text().trim(); // 잔여좌석
+    seatsData['0DB_1_max'] = seats1_1;
+    seatsData['0DB_1_current'] = seats1_2;
+    // 0 데시벨 2
+    seats2_1 = $('tr:nth-child(4) td:nth-child(3)').text().trim(); // 총좌석
+    seats2_2 = $('tr:nth-child(4) td:nth-child(4)').text().trim(); // 잔여좌석
+    seatsData['0DB_2_max'] = seats2_1;
+    seatsData['0DB_2_current'] = seats2_2;
+    // 0 ZONE 1
+    seats3_1 = $('tr:nth-child(5) td:nth-child(3)').text().trim(); // 총좌석
+    seats3_2 = $('tr:nth-child(5) td:nth-child(4)').text().trim(); // 잔여좌석
+    seatsData['0ZONE_1_max'] = seats3_1;
+    seatsData['0ZONE_1_current'] = seats3_2;
+    // 0 ZONE 2
+    seats4_1 = $('tr:nth-child(6) td:nth-child(3)').text().trim(); // 총좌석
+    seats4_2 = $('tr:nth-child(6) td:nth-child(4)').text().trim(); // 잔여좌석
+    seatsData['0ZONE_2_max'] = seats4_1;
+    seatsData['0ZONE_2_current'] = seats4_2;
+
+    return seatsData;
 
 }
+
+
+// 파일 기록 함수
+function appendDataToCsv(seatsData) {
+    const timestamp = new Date().toISOString();
+    const row = `${timestamp},${seatsData['0DB_1_max']},${seatsData['0DB_1_current']},${seatsData['0DB_2_max']},${seatsData['0DB_2_current']}, ...
+    ${seatsData['0ZONE_1_max']},${seatsData['0ZONE_1_current']},${seatsData['0ZONE_2_max']},${seatsData['0ZONE_2_current']}\n`;
+    fs.appendFileSync(fileName, row);
+}
+
+
+// 엑셀 초기 설정
+function initial_csv(){
+    const fs = require('fs');
+    const path = require('path');
+
+    const fileName = 'seats.csv';
+    const headers = 'Timestamp,0 Decibel 1 max,0 Decibel 1 current,0 Decibel 2 max,0 Decibel 2 current,0 Zone 1 max,0 Zone 1 current,0 Zone 2 max,0 Zone 2 current\n';
+
+    if (!fs.existsSync(fileName)) {
+    fs.writeFileSync(fileName, headers);
+    }
+}
+
 
 UOSLibrary.getLibSeat_old = async function getLibSeat(type){ // C : 중도 A : 경도 L : 볍도
 
