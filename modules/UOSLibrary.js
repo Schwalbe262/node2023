@@ -10,7 +10,11 @@ const cheerio = require('cheerio')
 
 UOSLibrary.getLibSeat = async function getLibSeat(){
 
-    let body = await fetch("http://wisem.uos.ac.kr/SEAT/domian5.asp")
+    const url = 'http://wisem.uos.ac.kr/SEAT/domian5.asp';
+
+    const response = await axios.get(url);
+    const html = response.data;
+    const $ = cheerio.load(html);
 
     seats1 = $('tr.nth-child(3) td.nth-child(3)').font;
     seats2 = $('tr.nth-child(3) td.nth-child(4)').font;
