@@ -50,7 +50,20 @@ UOSLibrary.getLibSeat = async function getLibSeat(){
 // 파일 기록 함수
 UOSLibrary.appendDataToCsv = function appendDataToCsv(seatsData) {
     const fileName = 'seats.csv';
-    const timestamp = new Date().toISOString();
+
+    const now = new Date();
+    const koreaTime = new Intl.DateTimeFormat('ko-KR', {
+    timeZone: 'Asia/Seoul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+    }).format(now);
+
+    const timestamp = koreaTime.toISOString();
     const row = `${timestamp},${seatsData['0DB_1_max']},${seatsData['0DB_1_current']},${seatsData['0DB_2_max']},${seatsData['0DB_2_current']},${seatsData['0ZONE_1_max']},${seatsData['0ZONE_1_current']},${seatsData['0ZONE_2_max']},${seatsData['0ZONE_2_current']}\n`;
     fs.appendFileSync(fileName, row);
   }
