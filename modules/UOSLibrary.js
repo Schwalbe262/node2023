@@ -48,18 +48,13 @@ UOSLibrary.getLibSeat = async function getLibSeat(){
 
 
 // 파일 기록 함수
-UOSLibrary.initial_csv = function initial_csv() {
-    const fs = require('fs');
-    const path = require('path');
-  
+UOSLibrary.appendDataToCsv = function appendDataToCsv(seatsData) {
     const fileName = 'seats.csv';
-    const headers = 'Timestamp,0 Decibel 1 max,0 Decibel 1 current,0 Decibel 2 max,0 Decibel 2 current,0 Zone 1 max,0 Zone 1 current,0 Zone 2 max,0 Zone 2 current\n';
-  
-    // 파일이 존재하지 않을 때만 작성.
-    if (!fs.existsSync(fileName)) {
-      fs.writeFileSync(fileName, headers);
-    }
+    const timestamp = new Date().toISOString();
+    const row = `${timestamp},${seatsData['0DB_1_max']},${seatsData['0DB_1_current']},${seatsData['0DB_2_max']},${seatsData['0DB_2_current']},${seatsData['0ZONE_1_max']},${seatsData['0ZONE_1_current']},${seatsData['0ZONE_2_max']},${seatsData['0ZONE_2_current']}\n`;
+    fs.appendFileSync(fileName, row);
   }
+  
 
 
 // 엑셀 초기 설정
@@ -70,6 +65,7 @@ UOSLibrary.initial_csv = function initial_csv() {
     const fileName = 'seats.csv';
     const headers = 'Timestamp,0 Decibel 1 max,0 Decibel 1 current,0 Decibel 2 max,0 Decibel 2 current,0 Zone 1 max,0 Zone 1 current,0 Zone 2 max,0 Zone 2 current\n';
 
+    // 파일 없을때만 동작
     if (!fs.existsSync(fileName)) {
     fs.writeFileSync(fileName, headers);
     }
