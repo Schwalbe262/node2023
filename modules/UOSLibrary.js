@@ -69,7 +69,7 @@ UOSLibrary.appendDataToCsv = function appendDataToCsv(seatsData) {
     }).format(now);
 
     const timestamp = koreaTime.replace(/(\d{4})-(\d{2})-(\d{2})\s(\d{2}):(\d{2}):(\d{2})/, '$1-$2-$3T$4:$5:$6');
-    const row = `${timestamp},${seatsData['0DB_1_max']},${seatsData['0DB_1_current']},${seatsData['0DB_2_max']},${seatsData['0DB_2_current']},${seatsData['0ZONE_1_max']},${seatsData['0ZONE_1_current']},${seatsData['0ZONE_2_max']},${seatsData['0ZONE_2_current']},${seatsData['Laptop_ZONE_max']},${seatsData['Laptop_ZONE_current']}\n`;
+    const row = `${timestamp},${seatsData['0DB_1_max']},${seatsData['0DB_1_current']},${seatsData['0DB_2_max']},${seatsData['0DB_2_current']},${seatsData['0ZONE_1_max']},${seatsData['0ZONE_1_current']},${seatsData['0ZONE_2_max']},${seatsData['0ZONE_2_current']},${seatsData['laptop_zone_max']},${seatsData['laptop_zone_current']}\n`;
     fs.appendFileSync(fileName, row);
   }
   

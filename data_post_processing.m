@@ -35,62 +35,78 @@ ZONE1_max = data.x0Zone1Max;
 ZONE1_current = data.x0Zone1Current;
 ZONE2_max = data.x0Zone2Max;
 ZONE2_current = data.x0Zone2Current;
+Laptop_max = data.Timestamp;
+Laptop_current = data.Timestamp;
 
 % 데이터 시각화
 figure;
 
-subplot(4, 2, 1);
+subplot(5, 2, 1);
 plot(datetimes, DB1_current,"LineWidth",5);
 title('0 데시벨 1 (점유좌석수)');
 %xlabel('Timestamp');
 ylabel('점유좌석');
 grid on;
 
-subplot(4, 2, 2);
+subplot(5, 2, 2);
 plot(datetimes, DB1_current./DB1_max*100,"LineWidth",5);
 title('0 데시벨 1 (좌석점유율 [%])');
 %xlabel('Timestamp');
 ylabel('점유율 [%]');
 grid on;
 
-subplot(4, 2, 3);
+subplot(5, 2, 3);
 plot(datetimes, DB2_current,"LineWidth",5);
 title('0 데시벨 2');
 %xlabel('Timestamp');
 ylabel('점유좌석');
 grid on;
 
-subplot(4, 2, 4);
+subplot(5, 2, 4);
 plot(datetimes, DB2_current./DB2_max*100,"LineWidth",5);
 title('0 데시벨 2 (좌석점유율 [%])');
 %xlabel('Timestamp');
 ylabel('점유율 [%]');
 grid on;
 
-subplot(4, 2, 5);
+subplot(5, 2, 5);
 plot(datetimes, ZONE1_current,"LineWidth",5);
 title('0 Zone 1');
 %xlabel('Timestamp');
 ylabel('점유좌석');
 grid on;
 
-subplot(4, 2, 6);
+subplot(5, 2, 6);
 plot(datetimes, ZONE1_current./ZONE1_max*100,"LineWidth",5);
 title('0 Zone 1 (좌석점유율 [%])');
 %xlabel('Timestamp');
 ylabel('점유율 [%]');
 grid on;
 
-subplot(4, 2, 7);
+subplot(5, 2, 7);
 plot(datetimes, ZONE2_current,"LineWidth",5);
 title('0 Zone 2');
 %xlabel('Timestamp');
 ylabel('점유좌석');
 grid on;
 
-subplot(4, 2, 8);
+subplot(5, 2, 8);
 plot(datetimes, ZONE2_current./ZONE2_max*100,"LineWidth",5);
 title('0 Zone 2 (좌석점유율 [%])');
+%xlabel('Timestamp');
+ylabel('점유율 [%]');
+grid on;
+
+subplot(5, 2, 9);
+plot(datetimes, ZONE2_current,"LineWidth",5);
+title('노트북실');
+%xlabel('Timestamp');
+ylabel('점유좌석');
+grid on;
+
+subplot(5, 2, 10);
+plot(datetimes, ZONE2_current./ZONE2_max*100,"LineWidth",5);
+title('노트북실 (좌석점유율 [%])');
 %xlabel('Timestamp');
 ylabel('점유율 [%]');
 grid on;
