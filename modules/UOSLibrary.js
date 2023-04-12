@@ -1,6 +1,7 @@
 UOSLibrary = new Object()
 
 const CheerSoup = require('cheersoup')
+const FormData=require("form-data")
 
 UOSLibrary.getLibSeat = async function getLibSeat(type){ // C : 중도 A : 경도 L : 볍도
 
