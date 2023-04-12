@@ -5,7 +5,24 @@ const FormData=require("form-data")
 const request = require('request')
 const fetch = require('node-fetch').default
 
-UOSLibrary.getLibSeat = async function getLibSeat(type){ // C : 중도 A : 경도 L : 볍도
+const axios = require('axios')
+const cheerio = require('cheerio')
+
+UOSLibrary.getLibSeat = async function getLibSeat(){
+
+    let body = await fetch("http://wisem.uos.ac.kr/SEAT/domian5.asp")
+
+    seats1 = $('tr.nth-child(3) td.nth-child(3)').font;
+    seats2 = $('tr.nth-child(3) td.nth-child(4)').font;
+    seats3 = $('tr.nth-child(3) td.nth-child(5)').font;
+
+    console.log(seats1)
+    console.log(seats2)
+    console.log(seats3)
+
+}
+
+UOSLibrary.getLibSeat_old = async function getLibSeat(type){ // C : 중도 A : 경도 L : 볍도
 
     //let body = org.jsoup.Jsoup.connect("http://wisem.uos.ac.kr/mobile/MA/xml_seat_status_list.php").data("lib_gb", "C").post().select("item").toArray(); // original code
     //org.jsoup.Jsoup.connect("http://wisem.uos.ac.kr/mobile/MA/xml_seat_status_list.php").data("lib_gb", "C").post() <= 이부분은 fetch가 처리
