@@ -49,6 +49,7 @@ UOSLibrary.getLibSeat = async function getLibSeat(){
 
 // 파일 기록 함수
 UOSLibrary.appendDataToCsv = function appendDataToCsv(seatsData) {
+    const fileName = 'seats.csv';
     const timestamp = new Date().toISOString();
     const row = `${timestamp},${seatsData['0DB_1_max']},${seatsData['0DB_1_current']},${seatsData['0DB_2_max']},${seatsData['0DB_2_current']}, ...
     ${seatsData['0ZONE_1_max']},${seatsData['0ZONE_1_current']},${seatsData['0ZONE_2_max']},${seatsData['0ZONE_2_current']}\n`;
