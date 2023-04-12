@@ -48,7 +48,7 @@ UOSLibrary.getLibSeat = async function getLibSeat(){
 
 
 // 파일 기록 함수
-function appendDataToCsv(seatsData) {
+UOSLibrary.appendDataToCsv = function appendDataToCsv(seatsData) {
     const timestamp = new Date().toISOString();
     const row = `${timestamp},${seatsData['0DB_1_max']},${seatsData['0DB_1_current']},${seatsData['0DB_2_max']},${seatsData['0DB_2_current']}, ...
     ${seatsData['0ZONE_1_max']},${seatsData['0ZONE_1_current']},${seatsData['0ZONE_2_max']},${seatsData['0ZONE_2_current']}\n`;
@@ -57,7 +57,7 @@ function appendDataToCsv(seatsData) {
 
 
 // 엑셀 초기 설정
-function initial_csv(){
+UOSLibrary.initial_csv = function initial_csv() {
     const fs = require('fs');
     const path = require('path');
 
