@@ -41,6 +41,11 @@ UOSLibrary.getLibSeat = async function getLibSeat(){
     seats4_2 = $('tr:nth-child(6) td:nth-child(4)').text().trim(); // 잔여좌석
     seatsData['0ZONE_2_max'] = seats4_1;
     seatsData['0ZONE_2_current'] = seats4_2;
+    // 노트북실
+    seats5_1 = $('tr:nth-child(7) td:nth-child(3)').text().trim(); // 총좌석
+    seats5_2 = $('tr:nth-child(7) td:nth-child(4)').text().trim(); // 잔여좌석
+    seatsData['laptop_zone_max'] = seats5_1;
+    seatsData['laptop_zone_current'] = seats5_2;
 
     return seatsData;
 
@@ -64,7 +69,7 @@ UOSLibrary.appendDataToCsv = function appendDataToCsv(seatsData) {
     }).format(now);
 
     const timestamp = koreaTime.replace(/(\d{4})-(\d{2})-(\d{2})\s(\d{2}):(\d{2}):(\d{2})/, '$1-$2-$3T$4:$5:$6');
-    const row = `${timestamp},${seatsData['0DB_1_max']},${seatsData['0DB_1_current']},${seatsData['0DB_2_max']},${seatsData['0DB_2_current']},${seatsData['0ZONE_1_max']},${seatsData['0ZONE_1_current']},${seatsData['0ZONE_2_max']},${seatsData['0ZONE_2_current']}\n`;
+    const row = `${timestamp},${seatsData['0DB_1_max']},${seatsData['0DB_1_current']},${seatsData['0DB_2_max']},${seatsData['0DB_2_current']},${seatsData['0ZONE_1_max']},${seatsData['0ZONE_1_current']},${seatsData['0ZONE_2_max']},${seatsData['0ZONE_2_current']},${seatsData['Laptop_ZONE_max']},${seatsData['Laptop_ZONE_current']}\n`;
     fs.appendFileSync(fileName, row);
   }
   
@@ -76,7 +81,7 @@ UOSLibrary.initial_csv = function initial_csv() {
     const path = require('path');
 
     const fileName = 'seats.csv';
-    const headers = 'Timestamp,0 Decibel 1 max,0 Decibel 1 current,0 Decibel 2 max,0 Decibel 2 current,0 Zone 1 max,0 Zone 1 current,0 Zone 2 max,0 Zone 2 current\n';
+    const headers = 'Timestamp,0 Decibel 1 max,0 Decibel 1 current,0 Decibel 2 max,0 Decibel 2 current,0 Zone 1 max,0 Zone 1 current,0 Zone 2 max,0 Zone 2 current, Laptop zone max, Laptop zone current\n';
 
     // 파일 없을때만 동작
     if (!fs.existsSync(fileName)) {

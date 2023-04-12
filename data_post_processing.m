@@ -42,48 +42,55 @@ figure;
 subplot(4, 2, 1);
 plot(datetimes, DB1_current,"LineWidth",5);
 title('0 데시벨 1 (점유좌석수)');
-xlabel('Timestamp');
-ylabel('Seats');
+%xlabel('Timestamp');
+ylabel('점유좌석');
+grid on;
 
 subplot(4, 2, 2);
 plot(datetimes, DB1_current./DB1_max*100,"LineWidth",5);
 title('0 데시벨 1 (좌석점유율 [%])');
-xlabel('Timestamp');
-ylabel('Seats');
+%xlabel('Timestamp');
+ylabel('점유율 [%]');
+grid on;
 
 subplot(4, 2, 3);
 plot(datetimes, DB2_current,"LineWidth",5);
 title('0 데시벨 2');
-xlabel('Timestamp');
-ylabel('Seats');
+%xlabel('Timestamp');
+ylabel('점유좌석');
+grid on;
 
 subplot(4, 2, 4);
 plot(datetimes, DB2_current./DB2_max*100,"LineWidth",5);
 title('0 데시벨 2 (좌석점유율 [%])');
-xlabel('Timestamp');
-ylabel('Seats');
+%xlabel('Timestamp');
+ylabel('점유율 [%]');
+grid on;
 
 subplot(4, 2, 5);
 plot(datetimes, ZONE1_current,"LineWidth",5);
 title('0 Zone 1');
-xlabel('Timestamp');
-ylabel('Seats');
-subplot(3, 2, 6);
+%xlabel('Timestamp');
+ylabel('점유좌석');
+grid on;
 
 subplot(4, 2, 6);
 plot(datetimes, ZONE1_current./ZONE1_max*100,"LineWidth",5);
 title('0 Zone 1 (좌석점유율 [%])');
-xlabel('Timestamp');
-ylabel('Seats');
+%xlabel('Timestamp');
+ylabel('점유율 [%]');
+grid on;
 
 subplot(4, 2, 7);
 plot(datetimes, ZONE2_current,"LineWidth",5);
 title('0 Zone 2');
-xlabel('Timestamp');
-ylabel('Seats');
+%xlabel('Timestamp');
+ylabel('점유좌석');
+grid on;
 
 subplot(4, 2, 8);
 plot(datetimes, ZONE2_current./ZONE2_max*100,"LineWidth",5);
 title('0 Zone 2 (좌석점유율 [%])');
-xlabel('Timestamp');
-ylabel('Seats');
+%xlabel('Timestamp');
+ylabel('점유율 [%]');
+grid on;
