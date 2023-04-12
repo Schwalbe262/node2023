@@ -269,25 +269,33 @@ for i = 1:subplot_num
     switch i
         case 1
             plot(datetimes, DB1_current./DB1_max*100,"LineWidth",5);
-            title('0 데시벨 1 (좌석점유율 [%])');
+            title('0 데시벨 1');
         case 2
             plot(datetimes, DB2_current./DB2_max*100,"LineWidth",5);
-            title('0 데시벨 2 (좌석점유율 [%])');
+            title('0 데시벨 2');
         case 3
             plot(datetimes, ZONE1_current./ZONE1_max*100,"LineWidth",5);
-            title('0 Zone 1 (좌석점유율 [%])');
+            title('0 Zone 1');
         case 4
             plot(datetimes, ZONE2_current./ZONE2_max*100,"LineWidth",5);
-            title('0 Zone 2 (좌석점유율 [%])');
+            title('0 Zone 2');
         case 5
             plot(datetimes, Laptop_current./Laptop_max*100,"LineWidth",5);
-            title('노트북실 (좌석점유율 [%])');
+            title('노트북실');
         case 6
             total = DB1_current + DB2_current + ZONE1_current + ZONE2_current + Laptop_current;
             plot(datetimes, total,"LineWidth",5);
-            title('도서관 학생 수');
+            title('도서관 총 학생 수');
+            ylabel('학생수')
+            yyaxis right
+            total_current = DB1_current + DB2_current + ZONE1_current + ZONE2_current + Laptop_current;
+            total_max = DB1_max + DB2_max + ZONE1_max + ZONE2_max + Laptop_max;
+            plot(datetimes, total_current./total_max * 100,"LineWidth",5);
+            ylabel('좌석점유율 [%]');
     end
-    ylabel('점유율 [%]');
+    if i ~= 6
+        ylabel('점유율 [%]');
+    end
     grid on;
     axis tight;
     %set(gca, 'XTick', xticks_range);
@@ -295,5 +303,4 @@ for i = 1:subplot_num
     %xlim([xticks_start, xticks_end]);
 end
 
-ylabel('학생 수');
 
