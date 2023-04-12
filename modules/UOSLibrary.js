@@ -16,9 +16,9 @@ UOSLibrary.getLibSeat = async function getLibSeat(){
     const html = response.data;
     const $ = cheerio.load(html);
 
-    seats1 = $('tr.nth-child(3) td.nth-child(3)').font;
-    seats2 = $('tr.nth-child(3) td.nth-child(4)').font;
-    seats3 = $('tr.nth-child(3) td.nth-child(5)').font;
+    seats1 = $('tr:nth-child(3) td:nth-child(3)').text();
+    seats2 = $('tr:nth-child(3) td:nth-child(4)').text();
+    seats3 = $('tr:nth-child(3) td:nth-child(5)').text();
 
     console.log(seats1)
     console.log(seats2)
