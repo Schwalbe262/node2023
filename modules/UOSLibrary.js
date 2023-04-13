@@ -107,7 +107,7 @@ UOSLibrary.initial_csv = function initial_csv() {
     const path = require('path');
 
     const fileName = 'seats.csv';
-    const headers = 'Timestamp,0 Decibel 1 max,0 Decibel 1 current,0 Decibel 2 max,0 Decibel 2 current,0 Zone 1 max,0 Zone 1 current,0 Zone 2 max,0 Zone 2 current' +
+    const headers = 'Timestamp,0 Decibel 1 max,0 Decibel 1 current,0 Decibel 2 max,0 Decibel 2 current,0 Zone 1 max,0 Zone 1 current,0 Zone 2 max,0 Zone 2 current, ' +
     'Laptop zone max, Laptop zone current, Information zone max, Information zone current, business1 max, business1 current, business2 max, business2 current\n';
 
     // 파일 없을때만 동작

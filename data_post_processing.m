@@ -252,7 +252,7 @@ DB2_current = data.x0Decibel2Current;
 ZONE1_max = data.x0Zone1Max;
 ZONE1_current = data.x0Zone1Current;
 ZONE2_max = data.x0Zone2Max;
-ZONE2_current = data.x0Zone2Current;
+ZONE2_current = data.x0Zone2CurrentLaptopZoneMax;
 Laptop_max = data.LaptopZoneMax;
 Laptop_current = data.LaptopZoneCurrent;
 
