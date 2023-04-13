@@ -94,6 +94,7 @@ UOSLibrary.appendDataToCsv = function appendDataToCsv(seatsData) {
     `${seatsData['laptop_zone_max']},${seatsData['laptop_zone_current']},${seatsData['study_hall_max']},${seatsData['study_hall_current']},` +
     `${seatsData['information_zone_max']},${seatsData['information_zone_current']},${seatsData['business1_max']},${seatsData['business1_current']},` + 
     `${seatsData['business2_max']},${seatsData['business2_current']}\n`;
+    fs.appendFileSync(fileName, row);
 
 }
 
