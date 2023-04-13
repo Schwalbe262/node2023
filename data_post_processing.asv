@@ -299,7 +299,7 @@ for i = 1:subplot_num
             yyaxis right
             total_current = DB1_current + DB2_current + ZONE1_current + ZONE2_current + Laptop_current + Study_hall_current;
             total_max = DB1_max + DB2_max + ZONE1_max + ZONE2_max + Laptop_max + Study_hall_max;
-            plot(datetimes, total_current./total_max * 100,"LineWidth",5);
+            plot(datetimes, total_current./total_max * 100,"LineWidth",0.0001);
             ylabel('좌석점유율 [%]');
     end
     if i ~= 7
@@ -338,9 +338,9 @@ data.Hour = hours;
 
 data.Study_hall_max = str2double(data.Study_hall_max);
 data.Study_hall_current = str2double(data.Study_hall_current);
-data.InformationZoneMax = str2double();
-data.InformationZoneCurrent = str2double();
-data.business1Max = str2double();
+data.InformationZoneMax = str2double(data.InformationZoneMax);
+data.InformationZoneCurrent = str2double(data.InformationZoneCurrent);
+data.business1Max = str2double(data.business1Max);
 data.business1Current = str2double(data.business1Current);
 data.business2Max = str2double(data.business2Max);
 data.business2Current = str2double(data.business2Current);
@@ -350,7 +350,7 @@ hour_groups = groupsummary(data, 'Hour', @mean, {'x0Decibel1Current', 'x0Decibel
     'InformationZoneMax', 'InformationZoneCurrent', 'business1Max', 'business1Current', 'business2Max', 'business2Current'});
 
 % 결과 출력
-disp(hour_groups);
+%disp(hour_groups);
 
 % 데이터 시각화
 figure;
@@ -361,15 +361,21 @@ DB2_mean = hour_groups.fun1_x0Decibel2Current / 234 * 100;
 ZONE1_mean = hour_groups.fun1_x0Zone1Current / 153 * 100;
 ZONE2_mean = hour_groups.fun1_x0Zone2Current / 235 * 100;
 Laptop_mean = hour_groups.fun1_LaptopZoneCurrent / 50 * 100;
+Study_hall_mean = hour_groups.fun1_Study_hall_current / 32 * 100;
+Information_mean = hour_groups.fun1_InformationZoneCurrent / 93 * 100;
+Business1_mean = hour_groups.fun1_business1Current / 64 * 100;
+Business2_mean = hour_groups.fun1_business2Current / 64 * 100;
 
-barwidth = 1;
+barwidth = 1.2;
 
 % 시간별 평균 데이터를 막대 그래프로 표시
-bar(hour_values, [DB1_mean, DB2_mean, ZONE1_mean, ZONE2_mean, Laptop_mean], barwidth);
+bar(hour_values, [DB1_mean, DB2_mean, ZONE1_mean, ZONE2_mean, Laptop_mean, Study_hall_mean, ...
+    Information_mean, Business1_mean, Business2_mean], barwidth);
 title('각 시간대별 좌석 점유율 평균');
 xlabel('시간');
 ylabel('점유율 [%]');
-legend('0 데시벨 1', '0 데시벨 2', '0Zone 1', '0 Zone 2' ...
-    , '노트북실');
+legend('0 데시벨 1', '0 데시벨 2', '0 Zone 1', '0 Zone 2' ...
+    , '노트북실', '1층 스터디홀', '전자정보실', '경도1', '경도2');
 grid on;
 axis tight;
+xticks(0:1:24);
