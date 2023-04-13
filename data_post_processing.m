@@ -228,8 +228,6 @@ axis tight;
 %%
 clear; clc;
 
-subplot_num = 6;
-
 % 데이터 불러오기
 opts = detectImportOptions('seats.csv');
 opts = setvaropts(opts, 'Timestamp', 'Type', 'char');
@@ -252,17 +250,25 @@ DB2_current = data.x0Decibel2Current;
 ZONE1_max = data.x0Zone1Max;
 ZONE1_current = data.x0Zone1Current;
 ZONE2_max = data.x0Zone2Max;
-ZONE2_current = data.x0Zone2CurrentLaptopZoneMax;
+ZONE2_current = data.x0Zone2Current;
 Laptop_max = data.LaptopZoneMax;
 Laptop_current = data.LaptopZoneCurrent;
+Study_hall_max = str2double(data.Study_hall_max);
+Study_hall_max(isnan(Study_hall_max)) = 0;
+Study_hall_current = str2double(data.Study_hall_current);
+Study_hall_current(isnan(Study_hall_current)) = 0;
 
 % 데이터 시각화
 figure;
 
 % x축 날짜 및 시간 눈금 설정
 %xticks_start = dateshift(min(datetimes), 'start', 'day');
+xticks_start = datetimes(1);
 %xticks_end = dateshift(max(datetimes), 'end', 'day');
-%xticks_range = xticks_start:hours(2):xticks_end;
+xticks_end = datetimes(end);
+xticks_range = xticks_start:hours(2):xticks_end;
+
+subplot_num = 7;
 
 for i = 1:subplot_num
     subplot(subplot_num, 1, i);
@@ -283,24 +289,27 @@ for i = 1:subplot_num
             plot(datetimes, Laptop_current./Laptop_max*100,"LineWidth",5);
             title('노트북실');
         case 6
-            total = DB1_current + DB2_current + ZONE1_current + ZONE2_current + Laptop_current;
+            plot(datetimes, Study_hall_current./Study_hall_max*100,"LineWidth",5);
+            title('1인 스터디홀');
+        case 7
+            total = DB1_current + DB2_current + ZONE1_current + ZONE2_current + Laptop_current + Study_hall_current;
             plot(datetimes, total,"LineWidth",5);
             title('도서관 총 학생 수');
             ylabel('학생수')
             yyaxis right
-            total_current = DB1_current + DB2_current + ZONE1_current + ZONE2_current + Laptop_current;
-            total_max = DB1_max + DB2_max + ZONE1_max + ZONE2_max + Laptop_max;
-            plot(datetimes, total_current./total_max * 100,"LineWidth",5);
+            total_current = DB1_current + DB2_current + ZONE1_current + ZONE2_current + Laptop_current + Study_hall_current;
+            total_max = DB1_max + DB2_max + ZONE1_max + ZONE2_max + Laptop_max + Study_hall_max;
+            plot(datetimes, total_current./total_max * 100,"LineWidth",0.0001);
             ylabel('좌석점유율 [%]');
     end
-    if i ~= 6
+    if i ~= 7
         ylabel('점유율 [%]');
     end
     grid on;
     axis tight;
-    %set(gca, 'XTick', xticks_range);
-    %datetick('x', 'HH:MM', 'keepticks');
-    %xlim([xticks_start, xticks_end]);
+    set(gca, 'XTick', xticks_range);
+    datetick('x', 'HH:MM', 'keepticks');
+    xlim([xticks_start, xticks_end]);
 end
 
 
@@ -324,7 +333,21 @@ datetimes = datetime(timestamps, 'InputFormat', 'yyyy MM dd HH:mm:ss');
 % 시간별로 데이터 그룹화
 hours = hour(datetimes);
 data.Hour = hours;
-hour_groups = groupsummary(data, 'Hour', @mean, {'x0Decibel1Current', 'x0Decibel2Current', 'x0Zone1Current', 'x0Zone2Current', 'LaptopZoneCurrent'});
+%data = str2double(data);
+%data(isnan(data)) = 0;
+
+data.Study_hall_max = str2double(data.Study_hall_max);
+data.Study_hall_current = str2double(data.Study_hall_current);
+data.InformationZoneMax = str2double(data.InformationZoneMax);
+data.InformationZoneCurrent = str2double(data.InformationZoneCurrent);
+data.business1Max = str2double(data.business1Max);
+data.business1Current = str2double(data.business1Current);
+data.business2Max = str2double(data.business2Max);
+data.business2Current = str2double(data.business2Current);
+
+hour_groups = groupsummary(data, 'Hour', @mean, {'x0Decibel1Current', 'x0Decibel2Current', ...
+    'x0Zone1Current', 'x0Zone2Current', 'LaptopZoneCurrent', 'Study_hall_max', 'Study_hall_current', ...
+    'InformationZoneMax', 'InformationZoneCurrent', 'business1Max', 'business1Current', 'business2Max', 'business2Current'});
 
 % 결과 출력
 disp(hour_groups);
@@ -338,15 +361,20 @@ DB2_mean = hour_groups.fun1_x0Decibel2Current / 234 * 100;
 ZONE1_mean = hour_groups.fun1_x0Zone1Current / 153 * 100;
 ZONE2_mean = hour_groups.fun1_x0Zone2Current / 235 * 100;
 Laptop_mean = hour_groups.fun1_LaptopZoneCurrent / 50 * 100;
+Study_hall_mean = hour_groups.fun1_Study_hall_current / 32 * 100;
+Information_mean = hour_groups.fun1_InformationZoneCurrent / 93 * 100;
+Business1_mean = hour_groups.fun1_business1Current / 64 * 100;
+Business2_mean = hour_groups.fun1_business2Current / 64 * 100;
 
 barwidth = 1;
 
 % 시간별 평균 데이터를 막대 그래프로 표시
-bar(hour_values, [DB1_mean, DB2_mean, ZONE1_mean, ZONE2_mean, Laptop_mean], barwidth);
+bar(hour_values, [DB1_mean, DB2_mean, ZONE1_mean, ZONE2_mean, Laptop_mean, Study_hall_mean, ...
+    Information_mean, Business1_mean, Business2_mean], barwidth);
 title('각 시간대별 좌석 점유율 평균');
 xlabel('시간');
 ylabel('점유율 [%]');
-legend('0 데시벨 1', '0 데시벨 2', '0Zone 1', '0 Zone 2' ...
-    , '노트북실');
+legend('0 데시벨 1', '0 데시벨 2', '0 Zone 1', '0 Zone 2' ...
+    , '노트북실', '1층 스터디홀', '전자정보실', '경도1', '경도2');
 grid on;
 axis tight;
