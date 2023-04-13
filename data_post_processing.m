@@ -304,3 +304,49 @@ for i = 1:subplot_num
 end
 
 
+%% 시간별로 그룹화
+
+clear; clc;
+
+subplot_num = 6;
+
+% 데이터 불러오기
+opts = detectImportOptions('seats.csv');
+opts = setvaropts(opts, 'Timestamp', 'Type', 'char');
+data = readtable('seats.csv', opts);
+
+% 날짜와 시간을 datetime 객체로 변환
+timestamps = strrep(data.Timestamp, ' 24:', ' 00:');
+timestamps = strrep(timestamps, '.', '');
+
+datetimes = datetime(timestamps, 'InputFormat', 'yyyy MM dd HH:mm:ss');
+
+% 시간별로 데이터 그룹화
+hours = hour(datetimes);
+data.Hour = hours;
+hour_groups = groupsummary(data, 'Hour', @mean, {'x0Decibel1Current', 'x0Decibel2Current', 'x0Zone1Current', 'x0Zone2Current', 'LaptopZoneCurrent'});
+
+% 결과 출력
+disp(hour_groups);
+
+% 데이터 시각화
+figure;
+
+hour_values = hour_groups.Hour;
+DB1_mean = hour_groups.fun1_x0Decibel1Current / 266 * 100;
+DB2_mean = hour_groups.fun1_x0Decibel2Current / 234 * 100;
+ZONE1_mean = hour_groups.fun1_x0Zone1Current / 153 * 100;
+ZONE2_mean = hour_groups.fun1_x0Zone2Current / 235 * 100;
+Laptop_mean = hour_groups.fun1_LaptopZoneCurrent / 50 * 100;
+
+barwidth = 1;
+
+% 시간별 평균 데이터를 막대 그래프로 표시
+bar(hour_values, [DB1_mean, DB2_mean, ZONE1_mean, ZONE2_mean, Laptop_mean], barwidth);
+title('각 시간대별 좌석 점유율 평균');
+xlabel('시간');
+ylabel('점유율 [%]');
+legend('0 데시벨 1', '0 데시벨 2', '0Zone 1', '0 Zone 2' ...
+    , '노트북실');
+grid on;
+axis tight;

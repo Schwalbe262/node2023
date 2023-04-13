@@ -269,28 +269,29 @@ for i = 1:subplot_num
     switch i
         case 1
             plot(datetimes, DB1_current./DB1_max*100,"LineWidth",5);
-            title('0 데시벨 1 (좌석점유율 [%])');
+            title('0 데시벨 1');
         case 2
             plot(datetimes, DB2_current./DB2_max*100,"LineWidth",5);
-            title('0 데시벨 2 (좌석점유율 [%])');
+            title('0 데시벨 2');
         case 3
             plot(datetimes, ZONE1_current./ZONE1_max*100,"LineWidth",5);
-            title('0 Zone 1 (좌석점유율 [%])');
+            title('0 Zone 1');
         case 4
             plot(datetimes, ZONE2_current./ZONE2_max*100,"LineWidth",5);
-            title('0 Zone 2 (좌석점유율 [%])');
+            title('0 Zone 2');
         case 5
             plot(datetimes, Laptop_current./Laptop_max*100,"LineWidth",5);
-            title('노트북실 (좌석점유율 [%])');
+            title('노트북실');
         case 6
             total = DB1_current + DB2_current + ZONE1_current + ZONE2_current + Laptop_current;
             plot(datetimes, total,"LineWidth",5);
-            ylabel('도서관 학생 수');
+            title('도서관 총 학생 수');
+            ylabel('학생수')
             yyaxis right
             total_current = DB1_current + DB2_current + ZONE1_current + ZONE2_current + Laptop_current;
             total_max = DB1_max + DB2_max + ZONE1_max + ZONE2_max + Laptop_max;
             plot(datetimes, total_current./total_max * 100,"LineWidth",5);
-            title('점유율 [%]');
+            ylabel('좌석점유율 [%]');
     end
     if i ~= 6
         ylabel('점유율 [%]');
@@ -302,5 +303,81 @@ for i = 1:subplot_num
     %xlim([xticks_start, xticks_end]);
 end
 
-ylabel('학생 수');
 
+%% 시간별로 그룹화
+
+clear; clc;
+
+subplot_num = 6;
+
+% 데이터 불러오기
+opts = detectImportOptions('seats.csv');
+opts = setvaropts(opts, 'Timestamp', 'Type', 'char');
+data = readtable('seats.csv', opts);
+
+% 날짜와 시간을 datetime 객체로 변환
+timestamps = strrep(data.Timestamp, ' 24:', ' 00:');
+timestamps = strrep(timestamps, '.', '');
+
+datetimes = datetime(timestamps, 'InputFormat', 'yyyy MM dd HH:mm:ss');
+
+% 시간별로 데이터 그룹화
+datetimes_hour = dateshift(datetimes, 'start', 'hour');
+data.Hour = datetimes_hour;
+hour_groups = groupsummary(data, 'Hour', @mean, {'x0Decibel1Current', 'x0Decibel2Current', 'x0Zone1Current', 'x0Zone2Current', 'LaptopZoneCurrent'});
+
+% 결과 출력
+disp(hour_groups);
+
+% 데이터 시각화
+figure;
+
+hours = hour_groups.Hour;
+DB1_mean = hour_groups.fun1_x0Decibel1Current;
+DB2_mean = hour_groups.fun2_x0Decibel1Current;
+ZONE1_mean = hour_groups.mean_x0Zone1Current;
+ZONE2_mean = hour_groups.mean_x0Zone2Current;
+Laptop_mean = hour_groups.mean_LaptopZoneCurrent;
+
+subplot(subplot_num, 1, 1);
+plot(hours, DB1_mean, 'LineWidth', 2);
+title('시간별 평균 0 데시벨 1 좌석');
+ylabel('점유율');
+grid on;
+axis tight;
+
+subplot(subplot_num, 1, 2);
+plot(hours, DB2_mean, 'LineWidth', 2);
+title('시간별 평균 0 데시벨 2 좌석');
+ylabel('점유율');
+grid on;
+axis tight;
+
+subplot(subplot_num, 1, 3);
+plot(hours, ZONE1_mean, 'LineWidth', 2);
+title('시간별 평균 0 Zone 1 좌석');
+ylabel('점유율');
+grid on;
+axis tight;
+
+subplot(subplot_num, 1, 4);
+plot(hours, ZONE2_mean, 'LineWidth', 2);
+title('시간별 평균 0 Zone 2 좌석');
+ylabel('점유율');
+grid on;
+axis tight;
+
+subplot(subplot_num, 1, 5);
+plot(hours, Laptop_mean, 'LineWidth', 2);
+title('시간별 평균 노트북실 좌석');
+ylabel('점유율');
+grid on;
+axis tight;
+
+subplot(subplot_num, 1, 6);
+total_mean = DB1_mean + DB2_mean + ZONE1_mean + ZONE2_mean + Laptop_mean;
+plot(hours, total_mean, 'LineWidth', 2);
+title('시간별 평균 도서관 학생 수');
+ylabel('학생수');
+grid on;
+axis tight;
