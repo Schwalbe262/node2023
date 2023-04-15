@@ -253,10 +253,8 @@ ZONE2_max = data.x0Zone2Max;
 ZONE2_current = data.x0Zone2Current;
 Laptop_max = data.LaptopZoneMax;
 Laptop_current = data.LaptopZoneCurrent;
-Study_hall_max = str2double(data.Study_hall_max);
-Study_hall_max(isnan(Study_hall_max)) = 0;
-Study_hall_current = str2double(data.Study_hall_current);
-Study_hall_current(isnan(Study_hall_current)) = 0;
+Study_hall_max = data.Study_hall_max;
+Study_hall_current = data.Study_hall_current;
 
 % 데이터 시각화
 figure;
@@ -337,14 +335,14 @@ data.Hour = hours;
 %data = str2double(data);
 %data(isnan(data)) = 0;
 
-data.Study_hall_max = str2double(data.Study_hall_max);
-data.Study_hall_current = str2double(data.Study_hall_current);
-data.InformationZoneMax = str2double(data.InformationZoneMax);
-data.InformationZoneCurrent = str2double(data.InformationZoneCurrent);
-data.business1Max = str2double(data.business1Max);
-data.business1Current = str2double(data.business1Current);
-data.business2Max = str2double(data.business2Max);
-data.business2Current = str2double(data.business2Current);
+% data.Study_hall_max = str2double(data.Study_hall_max);
+% data.Study_hall_current = str2double(data.Study_hall_current);
+% data.InformationZoneMax = str2double(data.InformationZoneMax);
+% data.InformationZoneCurrent = str2double(data.InformationZoneCurrent);
+% data.business1Max = str2double(data.business1Max);
+% data.business1Current = str2double(data.business1Current);
+% data.business2Max = str2double(data.business2Max);
+% data.business2Current = str2double(data.business2Current);
 
 hour_groups = groupsummary(data, 'Hour', @mean, {'x0Decibel1Current', 'x0Decibel2Current', ...
     'x0Zone1Current', 'x0Zone2Current', 'LaptopZoneCurrent', 'Study_hall_max', 'Study_hall_current', ...
