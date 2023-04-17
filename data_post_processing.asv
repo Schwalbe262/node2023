@@ -242,6 +242,7 @@ datetimes = datetime(timestamps, 'InputFormat', 'yyyy MM dd HH:mm:ss');
 
 
 
+
 % 각 열에 대한 변수 생성
 DB1_max = data.x0Decibel1Max;
 DB1_current = data.x0Decibel1Current;
@@ -253,10 +254,8 @@ ZONE2_max = data.x0Zone2Max;
 ZONE2_current = data.x0Zone2Current;
 Laptop_max = data.LaptopZoneMax;
 Laptop_current = data.LaptopZoneCurrent;
-Study_hall_max = str2double(data.Study_hall_max);
-Study_hall_max(isnan(Study_hall_max)) = 0;
-Study_hall_current = str2double(data.Study_hall_current);
-Study_hall_current(isnan(Study_hall_current)) = 0;
+Study_hall_max = data.Study_hall_max;
+Study_hall_current = data.Study_hall_current;
 
 % 데이터 시각화
 figure;
@@ -268,32 +267,42 @@ xticks_start = datetimes(1);
 xticks_end = datetimes(end);
 xticks_range = xticks_start:hours(2):xticks_end;
 
+% 자정 세로 점선 추가
+midnights = dateshift(xticks_start, 'start', 'day'):days(1):xticks_end;
+
+% 정오 중앙 요일 표시
+noons = dateshift(xticks_start, 'start', 'day') + hours(12):days(1):xticks_end;
+
+
 subplot_num = 7;
+LineWidth = 5;
 
 for i = 1:subplot_num
     subplot(subplot_num, 1, i);
+
+   
     switch i
         case 1
-            plot(datetimes, DB1_current./DB1_max*100,"LineWidth",5);
+            plot(datetimes, DB1_current./DB1_max*100,"LineWidth",LineWidth);
             title('0 데시벨 1');
         case 2
-            plot(datetimes, DB2_current./DB2_max*100,"LineWidth",5);
+            plot(datetimes, DB2_current./DB2_max*100,"LineWidth",LineWidth);
             title('0 데시벨 2');
         case 3
-            plot(datetimes, ZONE1_current./ZONE1_max*100,"LineWidth",5);
+            plot(datetimes, ZONE1_current./ZONE1_max*100,"LineWidth",LineWidth);
             title('0 Zone 1');
         case 4
-            plot(datetimes, ZONE2_current./ZONE2_max*100,"LineWidth",5);
+            plot(datetimes, ZONE2_current./ZONE2_max*100,"LineWidth",LineWidth);
             title('0 Zone 2');
         case 5
-            plot(datetimes, Laptop_current./Laptop_max*100,"LineWidth",5);
+            plot(datetimes, Laptop_current./Laptop_max*100,"LineWidth",LineWidth);
             title('노트북실');
         case 6
-            plot(datetimes, Study_hall_current./Study_hall_max*100,"LineWidth",5);
+            plot(datetimes, Study_hall_current./Study_hall_max*100,"LineWidth",LineWidth);
             title('1인 스터디홀');
         case 7
             total = DB1_current + DB2_current + ZONE1_current + ZONE2_current + Laptop_current + Study_hall_current;
-            plot(datetimes, total,"LineWidth",5);
+            plot(datetimes, total,"LineWidth",LineWidth);
             title('도서관 총 학생 수');
             ylabel('학생수')
             yyaxis right
@@ -302,13 +311,28 @@ for i = 1:subplot_num
             plot(datetimes, total_current./total_max * 100,"LineWidth",0.0001);
             ylabel('좌석점유율 [%]');
     end
+
     if i ~= 7
         ylabel('점유율 [%]');
     end
+
+    % 자정 세로 점선 그리기
+    for midnight = midnights
+        xline(midnight, ':r', "LineWidth", 5);
+    end
+    
+    % 정오 중앙에 요일 표시
+    for noon = noons
+        day_str = string(weekday(noon, 'long'));
+        text(noon, max(ylim()) * 0.95, day_str, 'HorizontalAlignment', 'center', 'Interpreter', 'none', 'FontSize', 14);
+    end
+
+    
+
     grid on;
     axis tight;
     set(gca, 'XTick', xticks_range);
-    datetick('x', 'HH:MM', 'keepticks');
+    datetick('x', 'mm/dd HH:MM', 'keepticks');
     xlim([xticks_start, xticks_end]);
 end
 
@@ -336,14 +360,14 @@ data.Hour = hours;
 %data = str2double(data);
 %data(isnan(data)) = 0;
 
-data.Study_hall_max = str2double(data.Study_hall_max);
-data.Study_hall_current = str2double(data.Study_hall_current);
-data.InformationZoneMax = str2double(data.InformationZoneMax);
-data.InformationZoneCurrent = str2double(data.InformationZoneCurrent);
-data.business1Max = str2double(data.business1Max);
-data.business1Current = str2double(data.business1Current);
-data.business2Max = str2double(data.business2Max);
-data.business2Current = str2double(data.business2Current);
+% data.Study_hall_max = str2double(data.Study_hall_max);
+% data.Study_hall_current = str2double(data.Study_hall_current);
+% data.InformationZoneMax = str2double(data.InformationZoneMax);
+% data.InformationZoneCurrent = str2double(data.InformationZoneCurrent);
+% data.business1Max = str2double(data.business1Max);
+% data.business1Current = str2double(data.business1Current);
+% data.business2Max = str2double(data.business2Max);
+% data.business2Current = str2double(data.business2Current);
 
 hour_groups = groupsummary(data, 'Hour', @mean, {'x0Decibel1Current', 'x0Decibel2Current', ...
     'x0Zone1Current', 'x0Zone2Current', 'LaptopZoneCurrent', 'Study_hall_max', 'Study_hall_current', ...

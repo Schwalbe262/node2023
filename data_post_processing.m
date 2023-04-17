@@ -242,6 +242,7 @@ datetimes = datetime(timestamps, 'InputFormat', 'yyyy MM dd HH:mm:ss');
 
 
 
+
 % 각 열에 대한 변수 생성
 DB1_max = data.x0Decibel1Max;
 DB1_current = data.x0Decibel1Current;
@@ -266,34 +267,43 @@ xticks_start = datetimes(1);
 xticks_end = datetimes(end);
 xticks_range = xticks_start:hours(2):xticks_end;
 
+% 자정 세로 점선 추가
+midnights = dateshift(xticks_start, 'start', 'day'):days(1):xticks_end;
+
+% 정오 중앙 요일 표시
+noons = dateshift(xticks_start, 'start', 'day') + hours(12):days(1):xticks_end;
+
+
 subplot_num = 7;
 LineWidth = 5;
 
 for i = 1:subplot_num
     subplot(subplot_num, 1, i);
+
+    Fontsize_title = 20;
     switch i
         case 1
             plot(datetimes, DB1_current./DB1_max*100,"LineWidth",LineWidth);
-            title('0 데시벨 1');
+            title('0 데시벨 1', 'FontSize', Fontsize_title);
         case 2
             plot(datetimes, DB2_current./DB2_max*100,"LineWidth",LineWidth);
-            title('0 데시벨 2');
+            title('0 데시벨 2', 'FontSize', Fontsize_title);
         case 3
             plot(datetimes, ZONE1_current./ZONE1_max*100,"LineWidth",LineWidth);
-            title('0 Zone 1');
+            title('0 Zone 1', 'FontSize', Fontsize_title);
         case 4
             plot(datetimes, ZONE2_current./ZONE2_max*100,"LineWidth",LineWidth);
-            title('0 Zone 2');
+            title('0 Zone 2', 'FontSize', Fontsize_title);
         case 5
             plot(datetimes, Laptop_current./Laptop_max*100,"LineWidth",LineWidth);
-            title('노트북실');
+            title('노트북실', 'FontSize', Fontsize_title);
         case 6
             plot(datetimes, Study_hall_current./Study_hall_max*100,"LineWidth",LineWidth);
-            title('1인 스터디홀');
+            title('1인 스터디홀', 'FontSize', Fontsize_title);
         case 7
             total = DB1_current + DB2_current + ZONE1_current + ZONE2_current + Laptop_current + Study_hall_current;
             plot(datetimes, total,"LineWidth",LineWidth);
-            title('도서관 총 학생 수');
+            title('도서관 총 학생 수', 'FontSize', Fontsize_title);
             ylabel('학생수')
             yyaxis right
             total_current = DB1_current + DB2_current + ZONE1_current + ZONE2_current + Laptop_current + Study_hall_current;
@@ -301,13 +311,51 @@ for i = 1:subplot_num
             plot(datetimes, total_current./total_max * 100,"LineWidth",0.0001);
             ylabel('좌석점유율 [%]');
     end
+
     if i ~= 7
         ylabel('점유율 [%]');
     end
+
+    % 자정 세로 점선 그리기
+    for midnight = midnights
+        xline(midnight, ':r', "LineWidth", 5);
+    end
+    
+    % 정오 중앙에 날짜와 요일 표시
+    first_noon = true;
+    for noon = noons
+        if first_noon
+            first_noon = false;
+            continue;
+        end
+        day_num = weekday(noon);
+        switch day_num
+            case 1
+                day_str = '일';
+            case 2
+                day_str = '월';
+            case 3
+                day_str = '화';
+            case 4
+                day_str = '수';
+            case 5
+                day_str = '목';
+            case 6
+                day_str = '금';
+            case 7
+                day_str = '토';
+        end
+        date_str = datestr(noon, 'yyyy-mm-dd');
+        text(noon, max(ylim()) * 0.95, [date_str ' ' day_str], 'HorizontalAlignment', 'center', 'Interpreter', 'none', 'FontSize', 14);
+    end
+
+    
+
     grid on;
     axis tight;
     set(gca, 'XTick', xticks_range);
-    datetick('x', 'mm/dd HH:MM', 'keepticks');
+%   datetick('x', 'mm/dd HH:MM', 'keepticks');
+    datetick('x', 'HH:MM', 'keepticks');
     xlim([xticks_start, xticks_end]);
 end
 
